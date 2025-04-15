@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
+        String authHeader = request.getHeader("authorization");
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             String username = jwtService.parseSignedClaims(token).getSubject();
@@ -46,8 +46,14 @@ public class JwtFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getHeader("Authorization").contains("/api/v1/auth");
-    }
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+//        return request.getHeader("Authorization").contains("/api/v1/auth");
+//    }
+@Override
+protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    String path = request.getRequestURI();
+    return path.contains("/api/v1/auth"); // check URI, not header
+}
+
 }

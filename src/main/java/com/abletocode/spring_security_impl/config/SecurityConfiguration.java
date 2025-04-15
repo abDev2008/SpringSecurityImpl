@@ -1,5 +1,6 @@
 package com.abletocode.spring_security_impl.config;
 
+import com.abletocode.spring_security_impl.user.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -21,6 +22,7 @@ public class SecurityConfiguration {
                 csrf(CsrfConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/management/**").hasAnyRole(Role.ADMIN.name(), Role.MEMBER.name())
 //                        .requestMatchers("/api/v1/auth/authenticate").authenticated()
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
