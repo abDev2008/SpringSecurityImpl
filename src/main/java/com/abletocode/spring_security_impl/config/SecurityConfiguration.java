@@ -1,5 +1,6 @@
 package com.abletocode.spring_security_impl.config;
 
+import com.abletocode.spring_security_impl.user.Permission;
 import com.abletocode.spring_security_impl.user.Role;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/api/v1/management/**").hasAnyRole(Role.ADMIN.name(), Role.MEMBER.name())
+                        .requestMatchers("/api/v1/management/admin-write").hasAuthority(
+                                Permission.ADMIN_WRITE.getPermission()
+                        )
 //                        .requestMatchers("/api/v1/auth/authenticate").authenticated()
                         .anyRequest().authenticated())
                 .cors(Customizer.withDefaults())
